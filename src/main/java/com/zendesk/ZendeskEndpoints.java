@@ -2,8 +2,6 @@ package com.zendesk;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -18,6 +16,8 @@ import org.json.JSONObject;
 import org.zendesk.client.v2.Zendesk;
 import org.zendesk.client.v2.model.Ticket;
 
+import com.google.gson.Gson;
+
 @Path("/zendesk")
 public class ZendeskEndpoints {
 
@@ -25,8 +25,8 @@ public class ZendeskEndpoints {
     @Produces("text/plain")
     @Path("/query/password")
     // http://localhost:9998/zendesk/query/password?domain=taz&userName=taizund12@gmail.com&password=Ammar24111991
-    public String getTicketsWithPassword(@QueryParam("domain") String domain, @QueryParam("userName") String userName,
-            @QueryParam("password") String password) throws JSONException {
+    public String getTicketsWithPassword(@QueryParam("domain") String domain, @QueryParam("userName") String userName, @QueryParam("password") String password)
+            throws JSONException, IOException {
         Zendesk zd = new Zendesk.Builder("https://" + domain + ".zendesk.com").setUsername(userName).setPassword(password).build();
         return convertJSONToCSV(zd.getTickets());
     }
@@ -36,21 +36,39 @@ public class ZendeskEndpoints {
     @Path("/query/token")
     // http://localhost:9998/zendesk/query/token?domain=taz&userName=taizund12@gmail.com&token=kN5jlqPWXXNc0a4a7BFImirIXg0G8VzDdMD5doHU
     public String getTicketsWithToken(@QueryParam("domain") String domain, @QueryParam("userName") String userName, @QueryParam("token") String token)
-            throws JSONException {
+            throws JSONException, IOException {
         Zendesk zd = new Zendesk.Builder("https://" + domain + ".zendesk.com").setUsername(userName).setToken(token).build();
         return convertJSONToCSV(zd.getTickets());
     }
 
-    private String convertJSONToCSV(Iterable<Ticket> tickets) throws JSONException {
-        
-        List<String> list = new ArrayList<>();
-        
-        for(Ticket ticket : tickets){
-            list.add(ticket.toString());
+    private String convertJSONToCSV(Iterable<Ticket> tickets) throws JSONException, IOException {
+
+        Gson gson = new Gson();
+
+        StringBuilder builder = new StringBuilder();
+        builder.append("{\"infile\": [");
+
+        for (Ticket ticket : tickets) {
+            builder.append("," + gson.toJson(ticket));
         }
-        System.out.println(list);
-            return list.toString();
+        builder.append("]}");
+
+        try {
+            JSONObject output;
+            output = new JSONObject(builder.toString().replaceFirst(",", ""));
+            File file = new File("fromJSON.csv");
+            JSONArray docs = output.getJSONArray("infile");
+            System.out.println();
+            System.out.println(docs.toString());
+            String csv = CDL.toString(docs);
+            System.out.println("csv:" + csv);
+            FileUtils.writeStringToFile(file, csv);
+
+            return "true";
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "false";
+        }
 
     }
-
 }
