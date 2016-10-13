@@ -35,6 +35,7 @@ public class ZendeskEndpoints {
     @Produces("text/plain")
     @Path("/query/token")
     // http://localhost:9998/zendesk/query/token?domain=taz&userName=taizund12@gmail.com&token=kN5jlqPWXXNc0a4a7BFImirIXg0G8VzDdMD5doHU
+    // http://localhost:9998/zendesk/query/token?domain=taz&userName=taizund12@gmail.com&token=u5rQnOMdYkH3fTmpQLB4RHWVxqQkvCirQ28cXHMF
     public String getTicketsWithToken(@QueryParam("domain") String domain, @QueryParam("userName") String userName, @QueryParam("token") String token)
             throws JSONException, IOException {
         Zendesk zd = new Zendesk.Builder("https://" + domain + ".zendesk.com").setUsername(userName).setToken(token).build();
