@@ -30,7 +30,6 @@ public final class CSVWriter {
             String anotherSubStrin = subStr.replaceAll(",", "  ");
             
             line = line.replace(subStr, "'"+anotherSubStrin+"'");
-            System.out.println(line);
             builder.append("," + line);
         }
         builder.append("]}");
@@ -40,9 +39,8 @@ public final class CSVWriter {
             File file = new File("fromJSON.csv");
             JSONArray docs = output.getJSONArray("infile");
             String csv = CDL.toString(docs);
-            System.out.println("csv:" + csv);
             FileUtils.writeStringToFile(file, csv);            
-            
+            System.out.println("look for fromJson.csv in the target folder");
         } catch (JSONException e) {
             e.printStackTrace();
         }

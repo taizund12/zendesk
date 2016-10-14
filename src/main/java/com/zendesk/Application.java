@@ -87,7 +87,6 @@ public class Application {
                     .asJson();
 
             oAuthToken = jacksonMapper.readValue(jsonResponse.getBody().toString(), OAuthToken.class);
-            System.out.println(oAuthToken.getAccess_token());
         } catch (UnirestException | IOException e) {
             LOGGER.error("Exception encountered calling the Zendesk API.", e);
         }
