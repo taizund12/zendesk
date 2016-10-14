@@ -1,4 +1,4 @@
-package com.zendesk.domain;
+package com.zendesk.connector.ticket.domain;
 
 import lombok.Getter;
 import lombok.Setter;
