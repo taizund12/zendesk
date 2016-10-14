@@ -1,4 +1,4 @@
-package com.zendesk;
+package com.zendesk.connector.ticket;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
