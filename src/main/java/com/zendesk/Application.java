@@ -31,7 +31,7 @@ public class Application {
     @Parameter(names = {"--password", "-p"}, description = "User Password")
     private String password;
 
-    @Parameter(names = {"--domain", "-d"}, description = "User Password")
+    @Parameter(names = {"--domain", "-d"}, description = "User domain")
     private String zendeskDomain;
 
     @Parameter(names = {"--apiKey", "-k"}, description = "OAuth API Key")
