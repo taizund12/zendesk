@@ -1,10 +1,10 @@
 package com.zendesk.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Getter
 @Setter

@@ -22,24 +22,29 @@ public final class CSVWriter {
         builder.append("{\"infile\": [");
 
         for (Ticket ticket : tickets) {
-            builder.append("," + gson.toJson(ticket));
+            String line = gson.toJson(ticket);
+            int val =line.indexOf("via");
+            int newVal = line.indexOf("createdAt");
+            
+            String subStr = line.substring(val+5, newVal-2);
+            String anotherSubStrin = subStr.replaceAll(",", "  ");
+            
+            line = line.replace(subStr, "'"+anotherSubStrin+"'");
+            builder.append("," + line);
         }
         builder.append("]}");
-
         try {
             JSONObject output;
             output = new JSONObject(builder.toString().replaceFirst(",", ""));
             File file = new File("fromJSON.csv");
             JSONArray docs = output.getJSONArray("infile");
-            System.out.println();
-            System.out.println(docs.toString());
             String csv = CDL.toString(docs);
-            System.out.println("csv:" + csv);
-            FileUtils.writeStringToFile(file, csv);
-            
+            FileUtils.writeStringToFile(file, csv);            
+            System.out.println("look for fromJson.csv in the target folder");
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
     }
+     
 }
