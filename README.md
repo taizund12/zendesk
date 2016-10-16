@@ -10,7 +10,7 @@ Make sure that you have Java 1.8 installed on your system.
 ##### 1. Go to the directory where the ticket-connector-*.jar is
 ##### 2. Run using the following command:
 ``` java
-java -jar ticket-connector-0.0.1-SNAPSHOT.jar -u <user_name> -p <password> -ci <client_Id> -cs <client_secret> -d <zendesk_domain>
+java -jar ticket-connector-0.1.jar -u <user_name> -p <password> -ci <client_Id> -cs <client_secret> -d <zendesk_domain>
 ```
 Substitute the actual values for <i>user_name</i>, <i>password</i> etc. in the above command.
 ##### 3. After succesful execution, a CSV file named TicketInfo.csv will be generated in the same directory where the application is run.
