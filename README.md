@@ -21,7 +21,7 @@ The application first connects to Zendesk using the user credentials and the Cli
 <br/>
 It then obtains an OAuth token using the Password Grant Type flow as described in https://support.zendesk.com/hc/en-us/articles/203663836-Using-OAuth-authentication-with-your-application  
 <br/>
-It calls the Zendesk API using this OAuth token and gets the relevant ticket information and then writes it into a CSV file.
+It calls the Zendesk API using this OAuth token, gets the relevant ticket information and then writes it into a CSV file.
 
  ___
 
