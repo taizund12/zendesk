@@ -73,13 +73,11 @@ public class Application {
                     
                     @Override
                     public User getUser(long id) {
-                        // TODO Auto-generated method stub
                         return zd.getUser(id);
                     }
 
                     @Override
                     public Zendesk getZendeskClient() {
-                        // TODO Auto-generated method stub
                         return zd;
                     }
                 };
