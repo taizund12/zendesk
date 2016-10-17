@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zendesk.client.v2.Zendesk;
+import org.zendesk.client.v2.model.User;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
@@ -17,11 +18,13 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.zendesk.connector.ticket.domain.OAuthToken;
+import com.zendesk.connector.ticket.writer.ZendeskManager;
 
 public class Application {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
     private static final String GRANT_TYPE_PASSWORD = "password";
+    private static ZendeskManager zendeskManager;
 
     private ObjectMapper jacksonMapper = new ObjectMapper();
     
@@ -45,6 +48,7 @@ public class Application {
     
     public static void main(String[] args) throws Exception {
         Application application = new Application();
+        
         JCommander jCommander = new JCommander(application, args);
         Optional<OAuthToken> oAuthTokenOptional = application.getOAuthTokenPasswordGrantType();
         application.getTicketsWithToken(oAuthTokenOptional);
@@ -59,13 +63,27 @@ public class Application {
     public void getTicketsWithToken(Optional<OAuthToken> oAuthTokenOptional) throws IOException {
         if(oAuthTokenOptional.isPresent()) {
             String token = oAuthTokenOptional.get().getAccess_token();
+            
             // Auto closeable resource
             try(Zendesk zd = new Zendesk.Builder(String.format("https://%s.zendesk.com", zendeskDomain))
                     .setUsername(userName)
                     .setOauthToken(token)
                     .build()) {
+                zendeskManager = new ZendeskManager() {
+                    
+                    @Override
+                    public User getUser(long id) {
+                        // TODO Auto-generated method stub
+                        return zd.getUser(id);
+                    }
 
-                writeToCSV(zd.getTickets());
+                    @Override
+                    public Zendesk getZendeskClient() {
+                        // TODO Auto-generated method stub
+                        return zd;
+                    }
+                };
+                writeToCSV(zd.getTickets(), zendeskManager);
             }
         } else {
             LOGGER.error("Could not generate the OAuth token for clientId = {}", clientId);

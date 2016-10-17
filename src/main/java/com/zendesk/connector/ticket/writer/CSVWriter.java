@@ -28,15 +28,23 @@ public final class CSVWriter {
     private CSVWriter() {
     }
 
-    public static void writeToCSV(Iterable<Ticket> tickets) throws IOException {
+    public static void writeToCSV(Iterable<Ticket> tickets, ZendeskManager zendeskManager) throws IOException {
         LOGGER.info("Writing Ticket Information to CSV file.");
         
         Gson gson = new Gson();
         StringBuilder builder = new StringBuilder();
         builder.append("{\"infile\": [");
-
+        System.out.println(zendeskManager.getZendeskClient().getCurrentUser().getName());
+        String subName = zendeskManager.getZendeskClient().getCurrentUser().getName();
+        String reqName = null;
         for (Ticket ticket : tickets) {
             String line = gson.toJson(ticket);
+            Long requestorId = ticket.getRequesterId();
+            if(ticket.getRequesterId() != null){
+                if(zendeskManager.getUser(requestorId)!=null){
+                    reqName = zendeskManager.getUser(requestorId).getName();   
+                }
+            }
             
             // Handle the "," in the "via" field
             int viaPosition =line.indexOf("via");
@@ -44,6 +52,10 @@ public final class CSVWriter {
             String subStr = line.substring(viaPosition + 5, createdAtPosition - 2);
             String anotherSubString = subStr.replaceAll(",", "  ");
             line = line.replace(subStr, "'" + anotherSubString + "'");
+            line = line.substring(0,line.length()-1);
+            line = line + ", \"submittername\" : " + "\""+subName+"\"";
+            line = line + ", \"requesterName\" : " + "\""+reqName+"\"}";
+            
             builder.append(COMMA_DELIMITER + line);
         }
         
