@@ -59,7 +59,7 @@ public final class CSVWriter {
             String anotherSubString = subStr.replaceAll(",", "  ");
             line = line.replace(subStr, "'" + anotherSubString + "'");
             line = line.substring(0,line.length()-1);
-            line = line + ", \"submittername\" : " + "\""+subName+"\"";
+            line = line + ", \"submitterName\" : " + "\""+subName+"\"";
             line = line + ", \"requesterName\" : " + "\""+reqName+"\"}";
             
             builder.append(COMMA_DELIMITER + line);
