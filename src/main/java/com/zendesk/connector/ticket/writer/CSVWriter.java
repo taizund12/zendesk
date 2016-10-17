@@ -34,14 +34,21 @@ public final class CSVWriter {
         Gson gson = new Gson();
         StringBuilder builder = new StringBuilder();
         builder.append("{\"infile\": [");
-        String subName = zendeskManager.getZendeskClient().getCurrentUser().getName();
+        String subName = null;
         String reqName = null;
         for (Ticket ticket : tickets) {
             String line = gson.toJson(ticket);
             Long requestorId = ticket.getRequesterId();
-            if(ticket.getRequesterId() != null){
+            if(requestorId != null){
                 if(zendeskManager.getUser(requestorId)!=null){
                     reqName = zendeskManager.getUser(requestorId).getName();   
+                }
+            }
+            
+            Long submitterId = ticket.getSubmitterId();
+            if(submitterId != null){
+                if(zendeskManager.getUser(submitterId)!=null){
+                    subName = zendeskManager.getUser(submitterId).getName();   
                 }
             }
             
