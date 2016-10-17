@@ -24,7 +24,7 @@ public class Application {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
     private static final String GRANT_TYPE_PASSWORD = "password";
-    private static ZendeskManager zendeskManager;
+    private ZendeskManager zendeskManager;
 
     private ObjectMapper jacksonMapper = new ObjectMapper();
     
